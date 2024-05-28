@@ -1,0 +1,125 @@
+<div class="container">
+  <h4>Add-Employee</h4>
+  <form [formGroup]="employeeForm" class="form-container">
+    <mat-dialog-content>
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Identity:</mat-label>
+          <input matInput type="text" formControlName="identity" placeholder="Enter Identity">
+          <mat-error *ngIf="employeeForm.get('identity')?.hasError('required')">ID Number is required</mat-error>
+          <mat-error *ngIf="employeeForm.get('identity')?.hasError('pattern')">Identity must be a number with maximum
+            length of 9 digits</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>First Name:</mat-label>
+          <input matInput type="text" formControlName="firstName" placeholder="Enter First Name">
+          <mat-error *ngIf="employeeForm.get('firstName')?.hasError('required')">First Name is required</mat-error>
+          <mat-error *ngIf="employeeForm.get('firstName')?.hasError('pattern')">
+            First Name must contain only English letters and be at least 3 characters long
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Last Name:</mat-label>
+          <input matInput type="text" formControlName="lastName" placeholder="Enter Last Name">
+          <mat-error *ngIf="employeeForm.get('lastName')?.hasError('required')">Last Name is required </mat-error>
+          <mat-error *ngIf="employeeForm.get('lastName')?.hasError('pattern')">
+            Last Name must contain only English letters and be at least 3 characters long
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Start Date To Work:</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" placeholder="startOfWorkDate"
+          formControlName="startOfWorkDate">
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+        <mat-error *ngIf="employeeForm.get('startOfWorkDate')?.hasError('required')">Start of Work Date is
+          required</mat-error>
+        <mat-error
+          *ngIf="employeeForm.get('startOfWorkDate')?.hasError('invalidStartDate') && employeeForm.get('startOfWorkDate')?.touched">
+          startOfWorkDate must be after DateOfBirth </mat-error>
+      </mat-form-field>
+
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Date of Birth:</mat-label>
+          <input matInput [matDatepicker]="dateOfBirth" placeholder="Enter Date of Birth" formControlName="dateOfBirth">
+          <mat-datepicker-toggle matSuffix [for]="dateOfBirth"></mat-datepicker-toggle>
+          <mat-datepicker #dateOfBirth></mat-datepicker>
+          <mat-error *ngIf="employeeForm.get('dateOfBirth')?.hasError('required')">Date of Birth is
+            required</mat-error>
+          <mat-error
+            *ngIf="employeeForm.get('dateOfBirth')?.hasError('tooYoung') && employeeForm.get('dateOfBirth')?.touched">
+            Date of Birth must be above or equal to 18 years old
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Gender:</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+          </mat-select>
+          <mat-error *ngIf="employeeForm.get('gender')?.hasError('required')">Gender is required</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-accordion formArrayName="positionEmployees">
+        <button mat-raised-button class="mat-raised-button" (click)="addNewControlToPosition()">Add
+          Position<mat-icon>add</mat-icon></button>
+        <mat-expansion-panel *ngFor="let position of FormArray.controls; let i = index" class="expansion-pane">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Position {{ i + 1 }}
+            </mat-panel-title>
+            <button mat-icon-button color="warn" (click)="removeControlOfPosition(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-expansion-panel-header>
+          <div [formGroupName]="i">
+            <mat-form-field appearance="fill">
+              <mat-label>Position</mat-label>
+              <mat-select formControlName="positionId" placeholder="Select Position">
+                <mat-option *ngFor="let pos of positionEmployees" [value]="pos.id"
+                  [disabled]="notShowEmployeePosition(pos.id, i)">{{ pos.name }}
+                </mat-option>
+                <!-- <mat-option value="other" (click)="addNewControlToPosition()">Other</mat-option> -->
+              </mat-select>
+              <mat-error *ngIf="FormArray.controls[i].get('positionId')?.hasError('required')">Position
+                is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Entry Date</mat-label>
+              <input matInput [matDatepicker]="entryDate" formControlName="dateOfEntry" placeholder="Enter Entry Date">
+              <mat-datepicker-toggle matSuffix [for]="entryDate"></mat-datepicker-toggle>
+              <mat-datepicker #entryDate></mat-datepicker>
+              <mat-error *ngIf="FormArray.controls[i].get('dateOfEntry')?.hasError('required')">Entry Date
+                is required</mat-error>
+              <mat-error *ngIf="FormArray.controls[i].get('dateOfEntry')?.hasError('entryDateBeforeWorkDate')">Entry
+                Date must be after Start of Work Date</mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="isAdmin">Is Admin</mat-checkbox>
+
+          </div>
+          <button mat-raised-button class="mat-raised-button" (click)="addNewControlToPosition()">Add
+            Position<mat-icon>add</mat-icon></button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-dialog-content>
+
+
+    <mat-dialog-actions align="end">
+      <button mat-button color="warn" (click)="cancel()">❌Cancel</button>
+      <button mat-button class="submit" (click)="onSubmit()">Submit</button>
+    </mat-dialog-actions>
+  </form>
+</div>

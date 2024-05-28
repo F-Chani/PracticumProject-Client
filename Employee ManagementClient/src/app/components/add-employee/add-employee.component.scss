@@ -1,0 +1,36 @@
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+h4 {
+  text-align: center;
+  color: black;
+}
+
+.submit{
+  background-color: black;
+  color: white;
+}
+.mat-raised-button{
+  margin-bottom: 10px;
+  background-color: black;
+  color: white;
+}
+.expansion-pane{
+  margin-bottom: 10px;
+}
+mat-form-field {
+  width: 100%;
+  margin-bottom: 20px;
+
+  input {
+    width: 100%;
+  }
+
+  mat-select {
+    width: 100%;
+  }
+}
+
